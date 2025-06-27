@@ -1,0 +1,103 @@
+{
+	"info": {
+		"_postman_id": "ecc2141d-bbcc-4d13-b6ea-ef110149aed0",
+		"name": "examen3parcial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34879750"
+	},
+	"item": [
+		{
+			"name": "load-data",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"tiempo\": { \"id\": 1 },\r\n  \"producto\": { \"id\": 1 },\r\n  \"proveedor\": { \"id\": 1 },\r\n  \"tienda\": { \"id\": 1 },\r\n  \"empleado\": { \"id\": 1 },\r\n  \"tipoTransaccion\": \"venta\",\r\n  \"cantidad\": 5,\r\n  \"valorUnitario\": 20.0,\r\n  \"valorTotal\": 100.0\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/load-data",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"load-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "dimension",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Nuevo Refresco Cola\",\r\n  \"codigo\": \"PRD001\",\r\n  \"categoria\": \"Bebidas\",\r\n  \"marca\": \"CocaCola\",\r\n  \"presentacion\": \"Botella 1L\",\r\n  \"unidadMedida\": \"ml\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/dimension/producto/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"dimension",
+						"producto",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "analytics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/analytics/productos-mas-vendidos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"analytics",
+						"productos-mas-vendidos"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

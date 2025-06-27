@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: inventario_dw
+      POSTGRES_USER: tiendita_user
+      POSTGRES_PASSWORD: sebas
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d   # <-- ACTIVADO: monta la carpeta con el dump.sql
+    networks:
+      - spring-net
+
+  app:
+    build: .
+    container_name: spring_app
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - spring-net
+
+volumes:
+  pgdata:
+
+networks:
+  spring-net:
+    driver: bridge

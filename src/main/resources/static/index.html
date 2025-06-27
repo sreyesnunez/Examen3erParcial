@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú Principal - Tiendita</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 0;
+        }
+        .menu-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .menu-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #264653;
+            margin-bottom: 3rem;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .menu-btn {
+            padding: 2rem 2.5rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            background: #fff;
+            box-shadow: 0 4px 14px rgba(38,70,83,0.15);
+            color: #264653;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .menu-btn:hover, .menu-btn.active {
+            background: #2a9d8f;
+            color: #fff;
+            font-weight: bold;
+            transform: scale(1.04);
+        }
+        .view-section {
+            display: none;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 10px #aaa2;
+            min-width: 320px;
+            min-height: 120px;
+        }
+        .view-section.active {
+            display: block;
+        }
+        .footer {
+            margin-top: 3rem;
+            color: #555;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <div class="menu-title">Sistema Inventario Tiendita</div>
+        <div class="menu-grid">
+            <button class="menu-btn" onclick="showSection('productos')">Productos</button>
+            <button class="menu-btn" onclick="showSection('proveedores')">Proveedores</button>
+            <button class="menu-btn" onclick="showSection('empleados')">Empleados</button>
+            <button class="menu-btn" onclick="showSection('tiendas')">Tiendas</button>
+            <button class="menu-btn" onclick="showSection('transaccion')">Agregar Transacción</button>
+            <button class="menu-btn" onclick="showSection('reportes')">Reportes / Analytics</button>
+        </div>
+
+        <div id="productos" class="view-section">
+            <h2>Catálogo de Productos</h2>
+            <div id="productos-content">Aquí se mostrarán los productos...</div>
+        </div>
+        <div id="proveedores" class="view-section">
+            <h2>Catálogo de Proveedores</h2>
+            <div id="proveedores-content">Aquí se mostrarán los proveedores...</div>
+        </div>
+        <div id="empleados" class="view-section">
+            <h2>Catálogo de Empleados</h2>
+            <div id="empleados-content">Aquí se mostrarán los empleados...</div>
+        </div>
+        <div id="tiendas" class="view-section">
+            <h2>Catálogo de Tiendas</h2>
+            <div id="tiendas-content">Aquí se mostrarán las tiendas...</div>
+        </div>
+        <div id="transaccion" class="view-section">
+            <h2>Agregar Transacción</h2>
+            <form id="form-transaccion" autocomplete="off">
+                <div style="margin-bottom: 1rem;">
+                    <label for="producto" style="font-weight:bold">Producto:</label>
+                    <select id="producto" required></select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="proveedor" style="font-weight:bold">Proveedor:</label>
+                    <select id="proveedor" required></select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="tienda" style="font-weight:bold">Tienda:</label>
+                    <select id="tienda" required></select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="empleado" style="font-weight:bold">Empleado:</label>
+                    <select id="empleado" required></select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="fecha" style="font-weight:bold">Fecha:</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="tipo" style="font-weight:bold">Tipo de Movimiento:</label>
+                    <select id="tipo" required>
+                        <option value="VENTA">Venta</option>
+                        <option value="COMPRA">Compra</option>
+                        <option value="MERMA">Merma</option>
+                    </select>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="cantidad" style="font-weight:bold">Cantidad:</label>
+                    <input type="number" id="cantidad" min="1" required>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label for="valorUnitario" style="font-weight:bold">Valor unitario:</label>
+                    <input type="number" id="valorUnitario" readonly>
+                </div>
+                <button type="submit" class="menu-btn" style="background:#2a9d8f;color:white;">Guardar Transacción</button>
+                <div id="transaccion-msg" style="margin-top: 1rem;"></div>
+            </form>
+        </div>
+        <div id="reportes" class="view-section">
+            <h2>Reportes / Analytics</h2>
+            <div style="margin-bottom: 2rem;">
+                <button onclick="cargarReporte('productos')" class="menu-btn" style="padding: 1rem 1.5rem; margin-right:1rem;">Productos más vendidos</button>
+                <button onclick="cargarReporte('proveedores')" class="menu-btn" style="padding: 1rem 1.5rem; margin-right:1rem;">Proveedores top</button>
+                <button onclick="cargarReporte('dias')" class="menu-btn" style="padding: 1rem 1.5rem;">Días con más ventas</button>
+            </div>
+            <div id="reportes-content">Selecciona un reporte.</div>
+        </div>
+        <div class="footer">Hecho por Sebastian Reyes, 2025</div>
+    </div>
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            let idx = ['productos', 'proveedores', 'empleados', 'tiendas', 'transaccion', 'reportes'].indexOf(section);
+            if(idx !== -1)
+                document.getElementsByClassName('menu-btn')[idx].classList.add('active');
+        }
+    </script>
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            let idx = ['productos', 'proveedores', 'empleados', 'tiendas', 'transaccion', 'reportes'].indexOf(section);
+            if(idx !== -1)
+                document.getElementsByClassName('menu-btn')[idx].classList.add('active');
+
+            // Cada vez que se muestra una sección, cargar datos si es catálogo
+            if (section === "productos") {
+                cargarProductos();
+            } else if (section === "proveedores") {
+                cargarProveedores();
+            } else if (section === "empleados") {
+                cargarEmpleados();
+            } else if (section === "tiendas") {
+                cargarTiendas();
+            }
+        }
+
+        async function cargarProductos() {
+            const cont = document.getElementById('productos-content');
+            cont.innerHTML = "Cargando productos...";
+            try {
+                const res = await fetch('/api/catalogo/productos');
+                if (!res.ok) throw new Error("Error en el servidor");
+                const data = await res.json();
+                if (!Array.isArray(data) || data.length === 0) {
+                    cont.innerHTML = "No hay productos registrados.";
+                    return;
+                }
+                // Arma la tabla
+                let html = '<table border="1" style="width:100%; border-radius:10px; overflow:hidden; background:#f4f8fb"><tr><th>ID</th><th>Nombre</th><th>Código</th><th>Categoría</th><th>Marca</th><th>Presentación</th><th>Unidad</th></tr>';
+                data.forEach(prod => {
+                    html += `<tr>
+                        <td>${prod.id}</td>
+                        <td>${prod.nombre}</td>
+                        <td>${prod.codigo}</td>
+                        <td>${prod.categoria}</td>
+                        <td>${prod.marca}</td>
+                        <td>${prod.presentacion}</td>
+                        <td>${prod.unidadMedida}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                cont.innerHTML = html;
+            } catch (e) {
+                cont.innerHTML = "Error al cargar productos.";
+            }
+        }
+
+        // Repítelo igual para proveedores, empleados, tiendas (te doy una para proveedores):
+        async function cargarProveedores() {
+            const cont = document.getElementById('proveedores-content');
+            cont.innerHTML = "Cargando proveedores...";
+            try {
+                const res = await fetch('/api/catalogo/proveedores');
+                if (!res.ok) throw new Error("Error en el servidor");
+                const data = await res.json();
+                if (!Array.isArray(data) || data.length === 0) {
+                    cont.innerHTML = "No hay proveedores registrados.";
+                    return;
+                }
+                let html = '<table border="1" style="width:100%; border-radius:10px; overflow:hidden; background:#f4f8fb"><tr><th>ID</th><th>Nombre</th><th>Tipo</th><th>Teléfono</th><th>Correo</th></tr>';
+                data.forEach(prov => {
+                    html += `<tr>
+                        <td>${prov.id}</td>
+                        <td>${prov.nombre}</td>
+                        <td>${prov.tipo}</td>
+                        <td>${prov.telefono}</td>
+                        <td>${prov.correo}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                cont.innerHTML = html;
+            } catch (e) {
+                cont.innerHTML = "Error al cargar proveedores.";
+            }
+        }
+
+        // Agrega igual funciones para empleados y tiendas usando los campos de cada entidad
+        async function cargarEmpleados() {
+            const cont = document.getElementById('empleados-content');
+            cont.innerHTML = "Cargando empleados...";
+            try {
+                const res = await fetch('/api/catalogo/empleados');
+                if (!res.ok) throw new Error("Error en el servidor");
+                const data = await res.json();
+                if (!Array.isArray(data) || data.length === 0) {
+                    cont.innerHTML = "No hay empleados registrados.";
+                    return;
+                }
+                let html = '<table border="1" style="width:100%; border-radius:10px; overflow:hidden; background:#f4f8fb"><tr><th>ID</th><th>Nombre</th><th>Rol</th><th>Turno</th></tr>';
+                data.forEach(emp => {
+                    html += `<tr>
+                        <td>${emp.id}</td>
+                        <td>${emp.nombre}</td>
+                        <td>${emp.rol}</td>
+                        <td>${emp.turno}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                cont.innerHTML = html;
+            } catch (e) {
+                cont.innerHTML = "Error al cargar empleados.";
+            }
+        }
+
+        async function cargarTiendas() {
+            const cont = document.getElementById('tiendas-content');
+            cont.innerHTML = "Cargando tiendas...";
+            try {
+                const res = await fetch('/api/catalogo/tiendas');
+                if (!res.ok) throw new Error("Error en el servidor");
+                const data = await res.json();
+                if (!Array.isArray(data) || data.length === 0) {
+                    cont.innerHTML = "No hay tiendas registradas.";
+                    return;
+                }
+                let html = '<table border="1" style="width:100%; border-radius:10px; overflow:hidden; background:#f4f8fb"><tr><th>ID</th><th>Nombre</th><th>Ubicación</th><th>Superficie</th></tr>';
+                data.forEach(tienda => {
+                    html += `<tr>
+                        <td>${tienda.id}</td>
+                        <td>${tienda.nombre}</td>
+                        <td>${tienda.ubicacion}</td>
+                        <td>${tienda.superficie}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                cont.innerHTML = html;
+            } catch (e) {
+                cont.innerHTML = "Error al cargar tiendas.";
+            }
+        }
+
+        // Mostrar productos por default al abrir (opcional):
+        window.onload = () => showSection('productos');
+
+        async function cargarSelectCatalogo(idSelect, endpoint, campoMostrar) {
+            const select = document.getElementById(idSelect);
+            select.innerHTML = '<option value="">Cargando...</option>';
+            try {
+                const res = await fetch(endpoint);
+                if (!res.ok) throw new Error("Error");
+                const data = await res.json();
+                select.innerHTML = '<option value="">Seleccione</option>';
+                data.forEach(item => {
+                    select.innerHTML += `<option value="${item.id}">${item[campoMostrar]}</option>`;
+                });
+            } catch (e) {
+                select.innerHTML = '<option value="">Error al cargar</option>';
+            }
+        }
+
+        let productosData = []; // Variable global para guardar los productos
+
+        async function cargarFormularioTransaccion() {
+            // Cargar productos y guardar el array global
+            const res = await fetch('/api/catalogo/productos');
+            productosData = await res.json();
+            const selectProd = document.getElementById('producto');
+            selectProd.innerHTML = '<option value="">Seleccione</option>';
+            productosData.forEach(prod => {
+                selectProd.innerHTML += `<option value="${prod.id}">${prod.nombre}</option>`;
+            });
+
+            // Listeners para autollenar valor unitario
+            selectProd.onchange = function() {
+                const prod = productosData.find(p => p.id == selectProd.value);
+                document.getElementById('valorUnitario').value = prod ? prod.valorUnitario : "";
+            };
+
+            // Cargar selects restantes igual que antes:
+            cargarSelectCatalogo('proveedor', '/api/catalogo/proveedores', 'nombre');
+            cargarSelectCatalogo('tienda', '/api/catalogo/tiendas', 'nombre');
+            cargarSelectCatalogo('empleado', '/api/catalogo/empleados', 'nombre');
+        }
+
+
+        document.getElementById('form-transaccion').onsubmit = async function (e) {
+            e.preventDefault();
+            const cantidad = parseFloat(document.getElementById('cantidad').value);
+            const valorUnitario = parseFloat(document.getElementById('valor_unitario').value);
+            const data = {
+                idProducto: document.getElementById('producto').value,
+                idProveedor: document.getElementById('proveedor').value,
+                idTienda: document.getElementById('tienda').value,
+                idEmpleado: document.getElementById('empleado').value,
+                fecha: document.getElementById('fecha').value,
+                tipo: document.getElementById('tipo').value,
+                cantidad: cantidad,
+                valorUnitario: document.getElementById('valorUnitario').value,
+                valorTotal: cantidad * valorUnitario
+            };
+            const msg = document.getElementById('transaccion-msg');
+            try {
+                const res = await fetch('/api/load-data', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    msg.innerHTML = "<span style='color:green'>¡Transacción guardada correctamente!</span>";
+                    document.getElementById('form-transaccion').reset();
+                } else {
+                    const err = await res.text();
+                    msg.innerHTML = "<span style='color:red'>Error: " + err + "</span>";
+                }
+            } catch (e) {
+                msg.innerHTML = "<span style='color:red'>Error de red</span>";
+            }
+        };
+
+        // Cargar el formulario cada vez que abras la sección transaccion
+        function showSection(section) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            let idx = ['productos', 'proveedores', 'empleados', 'tiendas', 'transaccion', 'reportes'].indexOf(section);
+            if(idx !== -1)
+                document.getElementsByClassName('menu-btn')[idx].classList.add('active');
+
+            // Lógica de carga por sección:
+            if (section === "productos")      cargarProductos();
+            else if (section === "proveedores") cargarProveedores();
+            else if (section === "empleados")   cargarEmpleados();
+            else if (section === "tiendas")     cargarTiendas();
+            else if (section === "transaccion") cargarFormularioTransaccion();
+            // reportes vendrá después
+        }
+    </script>
+    <script>
+    function cargarReporte(tipo) {
+        const cont = document.getElementById('reportes-content');
+        cont.innerHTML = "Cargando reporte...";
+        let endpoint = "";
+        let headers = "";
+        if (tipo === 'productos') {
+            endpoint = "/api/analytics/productos-mas-vendidos";
+            headers = "<tr><th>Producto</th><th>Cantidad</th></tr>";
+        } else if (tipo === 'proveedores') {
+            endpoint = "/api/analytics/proveedor-top";
+            headers = "<tr><th>Proveedor</th><th>Cantidad</th></tr>";
+        } else if (tipo === 'dias') {
+            endpoint = "/api/analytics/dias-mas-ventas";
+            headers = "<tr><th>Día</th><th>Cantidad</th></tr>";
+        }
+        fetch(endpoint)
+            .then(resp => resp.json())
+            .then(data => {
+                if (!Array.isArray(data) || data.length === 0) {
+                    cont.innerHTML = "No hay datos.";
+                    return;
+                }
+                let html = `<table border="1" style="width:100%; border-radius:10px; overflow:hidden; background:#f4f8fb">${headers}`;
+                data.forEach(row => {
+                    html += `<tr>
+                        <td>${row[0]}</td>
+                        <td>${row[1]}</td>
+                    </tr>`;
+                });
+                html += '</table>';
+                cont.innerHTML = html;
+            })
+            .catch(() => cont.innerHTML = "Error al cargar el reporte.");
+    }
+    </script>
+
+
+</body>
+</html>
