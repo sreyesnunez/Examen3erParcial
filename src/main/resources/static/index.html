@@ -130,7 +130,7 @@
                 </div>
                 <div style="margin-bottom: 1rem;">
                     <label for="valorUnitario" style="font-weight:bold">Valor unitario:</label>
-                    <input type="number" id="valorUnitario" readonly>
+                    <input type="number" id="valorUnitario" step="0.01" min="0" required>
                 </div>
                 <button type="submit" class="menu-btn" style="background:#2a9d8f;color:white;">Guardar Transacción</button>
                 <div id="transaccion-msg" style="margin-top: 1rem;"></div>
@@ -148,36 +148,6 @@
         <div class="footer">Hecho por Sebastian Reyes, 2025</div>
     </div>
     <script>
-        function showSection(section) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(section).classList.add('active');
-            let idx = ['productos', 'proveedores', 'empleados', 'tiendas', 'transaccion', 'reportes'].indexOf(section);
-            if(idx !== -1)
-                document.getElementsByClassName('menu-btn')[idx].classList.add('active');
-        }
-    </script>
-    <script>
-        function showSection(section) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(section).classList.add('active');
-            let idx = ['productos', 'proveedores', 'empleados', 'tiendas', 'transaccion', 'reportes'].indexOf(section);
-            if(idx !== -1)
-                document.getElementsByClassName('menu-btn')[idx].classList.add('active');
-
-            // Cada vez que se muestra una sección, cargar datos si es catálogo
-            if (section === "productos") {
-                cargarProductos();
-            } else if (section === "proveedores") {
-                cargarProveedores();
-            } else if (section === "empleados") {
-                cargarEmpleados();
-            } else if (section === "tiendas") {
-                cargarTiendas();
-            }
-        }
-
         async function cargarProductos() {
             const cont = document.getElementById('productos-content');
             cont.innerHTML = "Cargando productos...";
@@ -324,12 +294,6 @@
                 selectProd.innerHTML += `<option value="${prod.id}">${prod.nombre}</option>`;
             });
 
-            // Listeners para autollenar valor unitario
-            selectProd.onchange = function() {
-                const prod = productosData.find(p => p.id == selectProd.value);
-                document.getElementById('valorUnitario').value = prod ? prod.valorUnitario : "";
-            };
-
             // Cargar selects restantes igual que antes:
             cargarSelectCatalogo('proveedor', '/api/catalogo/proveedores', 'nombre');
             cargarSelectCatalogo('tienda', '/api/catalogo/tiendas', 'nombre');
@@ -340,7 +304,7 @@
         document.getElementById('form-transaccion').onsubmit = async function (e) {
             e.preventDefault();
             const cantidad = parseFloat(document.getElementById('cantidad').value);
-            const valorUnitario = parseFloat(document.getElementById('valor_unitario').value);
+            const valorUnitario = parseFloat(document.getElementById('valorUnitario').value);
             const data = {
                 idProducto: document.getElementById('producto').value,
                 idProveedor: document.getElementById('proveedor').value,
@@ -349,7 +313,7 @@
                 fecha: document.getElementById('fecha').value,
                 tipo: document.getElementById('tipo').value,
                 cantidad: cantidad,
-                valorUnitario: document.getElementById('valorUnitario').value,
+                valorUnitario: valorUnitario,
                 valorTotal: cantidad * valorUnitario
             };
             const msg = document.getElementById('transaccion-msg');
